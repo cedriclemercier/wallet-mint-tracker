@@ -10,6 +10,7 @@ const settings = {
   apiKey: process.env.ALCHEMY_API_KEY, // Replace with your Alchemy API Key.
   network: env == "development" ? Network.ETH_GOERLI : Network.ETH_MAINNET, // Replace with your network.
 };
+const apiUrl = env == 'development' ? 'https://goerli.etherscan.io/' : 'https://etherscan.io/'
 
 const alchemy = new Alchemy(settings);
 console.log("Environment: " + env);
@@ -44,19 +45,17 @@ const processTx = (txn) => {
     let embeds = [];
     embeds[0] = new EmbedBuilder()
       .setTitle(`New mint!`)
-      .setURL(`https://goerli.etherscan.io/tx/${txn.transactionHash}`)
-      // .setThumbnail(`${data[i].profile_image_url}`)
-      .setAuthor({ name: w, url: `https://goerli.etherscan.io/address/${w}` })
+      .setURL(`${apiUrl}/tx/${txn.transactionHash}`)
+      .setAuthor({ name: w, url: `${apiUrl}/address/${w}` })
       .setDescription("Minted a new contract!")
-      // .setThumbnail('https://i.imgur.com/AfFp7pu.png')
       .addFields({
         name: "Opensea",
-        value: `https://opensea.io/assets?search[query]=${w}`,
+        value: `https://opensea.io/assets?search[query]=${txn.address}`,
         inline: false,
       })
       .addFields({
         name: "EtherScan",
-        value: `https://goerli.etherscan.io/address/${txn.address}`,
+        value: `${apiUrl}/address/${txn.address}`,
         inline: false,
       })
       .setTimestamp();
@@ -64,15 +63,13 @@ const processTx = (txn) => {
     webhookClient.send({ embeds: embeds });
   }
 
-  // console.log("Normal transfer!");
-  // console.log(txn);
 };
 
 alchemy.ws.on(
   {
     topics: [mintTopic, zeroTopic],
 
-    // address: "0x98339D8C260052B7ad81c28c16C0b98420f2B46a", // for testing
+    // address: process.env.CONTRACT_TEST, // for testing
     // method: AlchemySubscription.MINED_TRANSACTIONS, // for testing
     // addresses: wallets,
     // includeRemoved: true,
