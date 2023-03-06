@@ -62,7 +62,7 @@ const processTx = (txn) => {
       })
       .addFields({
         name: "Catchmint",
-        value: `https://catchmint.xyz/?address=${txn.address}`,
+        value: `https://catchmint.xyz/collection/ethereum/${txn.address}`,
         inline: false,
       })
       .setTimestamp();
