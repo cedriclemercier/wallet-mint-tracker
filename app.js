@@ -34,10 +34,6 @@ const zeroTopic =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
 
 const processTx = (txn) => {
-  if (wallets.includes(w)) {
-    console.log('oh!')
-    console.log(txn)
-  }
 
   if (txn.topics.length >= 3) {
     const w = Utils.hexValue(txn.topics[2]);
