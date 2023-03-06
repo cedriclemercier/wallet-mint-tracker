@@ -4,6 +4,7 @@ const { Pool } = pg.default;
 
 let pool;
 if (process.env.NODE_ENV == "development") {
+  console.log('Development.')
   pool = new Pool({
     user: "postgres",
     host: "localhost",
@@ -12,6 +13,7 @@ if (process.env.NODE_ENV == "development") {
     port: 5432,
   });
 } else {
+  console.log('Connection string connection.')
   const config = {
     connectionString: process.env.DATABASE_URL,
     ssl: {
