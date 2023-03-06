@@ -42,6 +42,7 @@ const processTx = (txn) => {
     }
 
     console.log(txn);
+
     let embeds = [];
     embeds[0] = new EmbedBuilder()
       .setTitle(`New mint!`)
@@ -56,6 +57,11 @@ const processTx = (txn) => {
       .addFields({
         name: "EtherScan",
         value: `${apiUrl}/address/${txn.address}`,
+        inline: false,
+      })
+      .addFields({
+        name: "Catchmint",
+        value: `https://catchmint.xyz/?address=${txn.address}`,
         inline: false,
       })
       .setTimestamp();

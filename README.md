@@ -11,9 +11,12 @@ Data is filtered by wallet addresses and result is send to discord webhook.
 ```ini
 NODE_ENV=development
 ALCHEMY_API_KEY=<your alchemy api key>
+WEBHOOK_URL=<the webhook to send data to>
+DATABASE_URL=<connection string>
+
+; local dev
 DB_NAME=<xxx>
 DB_PASSWORD=<xxx>
-WEBHOOK_URL=<the webhook to send data to>
 ```
 
 ## Database script
@@ -21,10 +24,8 @@ WEBHOOK_URL=<the webhook to send data to>
 ```SQL
 CREATE TABLE wallets
 (
-    address character varying(42) COLLATE NOT NULL,
-    name text COLLATE
-    address_checksum character varying(42)
-    CONSTRAINT wallets_pkey PRIMARY KEY (address)
+    address varchar(42) NOT NULL PRIMARY KEY,
+    name text,
+    address_checksum varchar(42)
 )
-
 ```
