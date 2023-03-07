@@ -10,7 +10,10 @@ const settings = {
   apiKey: process.env.ALCHEMY_API_KEY, // Replace with your Alchemy API Key.
   network: env == "development" ? Network.ETH_GOERLI : Network.ETH_MAINNET, // Replace with your network.
 };
-const apiUrl = env == 'development' ? 'https://goerli.etherscan.io/' : 'https://etherscan.io/'
+const apiUrl =
+  env == "development"
+    ? "https://goerli.etherscan.io/"
+    : "https://etherscan.io/";
 
 const alchemy = new Alchemy(settings);
 console.log("Environment: " + env);
@@ -34,7 +37,6 @@ const zeroTopic =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
 
 const processTx = async (txn) => {
-
   if (txn.topics.length >= 3) {
     const w = Utils.hexValue(txn.topics[2]);
 
@@ -46,18 +48,28 @@ const processTx = async (txn) => {
     let nftData;
     try {
       nftData = await alchemy.nft.getContractMetadata(txn.address);
-    }catch(err) {
-      console.log(err)
+      console.log(nftData);
+    } catch (err) {
+      console.log(err);
     }
 
     let embeds = [];
-    const website =  nftData.openSea.externalUrl || ''
-    const description = `${nftData.openSea.description}\nWebsite: ${website}` || 'No description';
+
+
+    let website,imageUrl,description;
+    website=imageUrl=description= 'n/a';
+    if (nftData.openSea) {
+      website = nftData.openSea.externalUrl || "";
+      description =
+        `${nftData.openSea.description}\nWebsite: ${website}` ||
+        "No description";
+      imageUrl = nftData.openSea.imageUrl || "";
+    }
+
     const links = `[Opensea](https://opensea.io/assets?search[query]=${txn.address}) - [Blur](https://blur.io/collection/${txn.address}) - [Magically](https://magically.gg/collection/${txn.address}) - [Catchmint]()`;
-    const imageUrl = nftData.openSea.imageUrl || '';
-    
+
     embeds[0] = new EmbedBuilder()
-      .setTitle(`Minted ${nftData.name}`)
+      .setTitle(`Minted ${nftData.name || '??'}!`)
       .setURL(`${apiUrl}tx/${txn.transactionHash}`)
       .setAuthor({ name: w, url: `${apiUrl}address/${w}` })
       .setThumbnail(imageUrl)
@@ -76,7 +88,6 @@ const processTx = async (txn) => {
 
     webhookClient.send({ embeds: embeds });
   }
-
 };
 
 alchemy.ws.on(
