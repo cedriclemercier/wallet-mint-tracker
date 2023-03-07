@@ -33,7 +33,7 @@ const mintTopic =
 const zeroTopic =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
 
-const processTx = (txn) => {
+const processTx = async (txn) => {
 
   if (txn.topics.length >= 3) {
     const w = Utils.hexValue(txn.topics[2]);
@@ -43,26 +43,33 @@ const processTx = (txn) => {
     }
 
     console.log(txn);
+    let nftData;
+    try {
+      nftData = await alchemy.nft.getContractMetadata(txn.address);
+    }catch(err) {
+      console.log(err)
+    }
 
     let embeds = [];
+    const website =  nftData.openSea.externalUrl || ''
+    const description = `${nftData.openSea.description}\nWebsite: ${website}` || 'No description';
+    const links = `[Opensea](https://opensea.io/assets?search[query]=${txn.address}) - [Blur](https://blur.io/collection/${txn.address}) - [Magically](https://magically.gg/collection/${txn.address}) - [Catchmint]()`;
+    const imageUrl = nftData.openSea.imageUrl || '';
+    
     embeds[0] = new EmbedBuilder()
-      .setTitle(`New mint!`)
-      .setURL(`${apiUrl}/tx/${txn.transactionHash}`)
-      .setAuthor({ name: w, url: `${apiUrl}/address/${w}` })
-      .setDescription("Minted a new contract!")
+      .setTitle(`Minted ${nftData.name}`)
+      .setURL(`${apiUrl}tx/${txn.transactionHash}`)
+      .setAuthor({ name: w, url: `${apiUrl}address/${w}` })
+      .setThumbnail(imageUrl)
+      .setDescription(description)
       .addFields({
-        name: "Opensea",
-        value: `https://opensea.io/assets?search[query]=${txn.address}`,
+        name: "Links",
+        value: links,
         inline: false,
       })
       .addFields({
-        name: "EtherScan",
-        value: `${apiUrl}/address/${txn.address}`,
-        inline: false,
-      })
-      .addFields({
-        name: "Catchmint",
-        value: `https://catchmint.xyz/collection/ethereum/${txn.address}`,
+        name: "Contract",
+        value: `${apiUrl}address/${txn.address}`,
         inline: false,
       })
       .setTimestamp();
