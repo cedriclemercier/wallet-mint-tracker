@@ -55,21 +55,24 @@ const processTx = async (txn) => {
 
     let embeds = [];
 
-
-    let website,imageUrl,description;
-    website=imageUrl=description= 'n/a';
+    let website, description;
+    let imageUrl =
+      "https://twirpz.files.wordpress.com/2015/06/twitter-avi-gender-balanced-figure.png";
     if (nftData.openSea) {
       website = nftData.openSea.externalUrl || "";
-      description =
-        `${nftData.openSea.description}\nWebsite: ${website}` ||
-        "No description";
-      imageUrl = nftData.openSea.imageUrl || "";
+      description = nftData.openSea.description || "No description";
+      imageUrl =
+        nftData.openSea.imageUrl ||
+        "https://twirpz.files.wordpress.com/2015/06/twitter-avi-gender-balanced-figure.png";
     }
 
-    const links = `[Opensea](https://opensea.io/assets?search[query]=${txn.address}) - [Blur](https://blur.io/collection/${txn.address}) - [Magically](https://magically.gg/collection/${txn.address}) - [Catchmint]()`;
+    const links = `[Opensea](https://opensea.io/assets?search[query]=${txn.address}) - [Blur](https://blur.io/collection/${txn.address}) - [Magically](https://magically.gg/collection/${txn.address}) - [Catchmint](https://catchmint.xyz/collection/ethereum/${txn.address})`;
 
+    console.log(imageUrl);
+    console.log(links);
+    console.log(description);
     embeds[0] = new EmbedBuilder()
-      .setTitle(`Minted ${nftData.name || '??'}!`)
+      .setTitle(`Minted ${nftData.name || "??"}!`)
       .setURL(`${apiUrl}tx/${txn.transactionHash}`)
       .setAuthor({ name: w, url: `${apiUrl}address/${w}` })
       .setThumbnail(imageUrl)
