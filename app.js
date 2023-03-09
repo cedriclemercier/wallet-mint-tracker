@@ -55,15 +55,16 @@ const processTx = async (txn) => {
 
     let embeds = [];
 
-    let website, description;
+    let website = "No website"
+    let description = "No description";
     let imageUrl =
-      "https://twirpz.files.wordpress.com/2015/06/twitter-avi-gender-balanced-figure.png";
+      "https://catchmint.xyz/_next/static/media/default_img_dark.b2723d4c.png";
     if (nftData.openSea) {
       website = nftData.openSea.externalUrl || "";
-      description = nftData.openSea.description || "No description";
+      description = nftData.openSea.description;
       imageUrl =
         nftData.openSea.imageUrl ||
-        "https://twirpz.files.wordpress.com/2015/06/twitter-avi-gender-balanced-figure.png";
+        "https://catchmint.xyz/_next/static/media/default_img_dark.b2723d4c.png";
     }
 
     const links = `[Opensea](https://opensea.io/assets?search[query]=${txn.address}) - [Blur](https://blur.io/collection/${txn.address}) - [Magically](https://magically.gg/collection/${txn.address}) - [Catchmint](https://catchmint.xyz/collection/ethereum/${txn.address})`;
