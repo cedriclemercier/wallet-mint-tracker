@@ -61,7 +61,7 @@ const processTx = async (txn) => {
       "https://catchmint.xyz/_next/static/media/default_img_dark.b2723d4c.png";
     if (nftData.openSea) {
       website = nftData.openSea.externalUrl || "";
-      description = nftData.openSea.description;
+      description = nftData.openSea.description || "No description";
       imageUrl =
         nftData.openSea.imageUrl ||
         "https://catchmint.xyz/_next/static/media/default_img_dark.b2723d4c.png";
