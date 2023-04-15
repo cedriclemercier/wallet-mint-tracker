@@ -19,11 +19,20 @@ const alchemy = new Alchemy(settings);
 console.log("Environment: " + env);
 
 let wallets;
+let walletDetails = {}
 try {
-  const query = { text: "select address_checksum from wallets" };
+  const query = { text: "select address_checksum, name, description from wallets" };
   const res = await db.query(query);
   // Format ARRAY
   wallets = res.rows.map((item) => item.address_checksum);
+
+  // Get array into a dict where name and desc can be accessed by wallet
+  res.rows.forEach(el => {
+    walletDetails[el.address_checksum] = {
+      name: el.name,
+      description: el.description
+    }
+  })
   console.log(wallets);
 } catch (err) {
   console.log(err.stack);
@@ -75,7 +84,7 @@ const processTx = async (txn) => {
     embeds[0] = new EmbedBuilder()
       .setTitle(`Minted ${nftData.name || "??"}!`)
       .setURL(`${apiUrl}tx/${txn.transactionHash}`)
-      .setAuthor({ name: w, url: `${apiUrl}address/${w}` })
+      .setAuthor({ name: walletDetails[w].name, url: `${apiUrl}address/${w}` })
       .setThumbnail(imageUrl)
       .setDescription(description)
       .addFields({
